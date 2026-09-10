@@ -57,10 +57,14 @@ npm run format:check
 - **注意力**是單頭、五個位置、手工設定的二維向量；沒有訓練、位置編碼或完整 Transformer。詞語標籤不代表學到的語意。
 - **取樣**對固定 logits 反覆獨立抽樣，每次不更新上下文；不是完整的自回歸生成器。
 - **BPE**從 Unicode code point 開始，在空白分隔的詞內合併；沒有空白 token 或詞尾標記，不等同 GPT 的 byte-level tokenizer。介面限制 2,000 個 UTF-16 code units 和 50 步合併。
-- 所有設定保存在目前頁面的記憶體中；重新整理會重設。匯出內容包含你輸入的語料，v0.1 尚未提供匯入介面。
+- 所有設定保存在目前頁面的記憶體中；重新整理會重設。匯出內容包含你輸入的語料，可匯入 JSON 恢復設定並重新計算。
 
 原始文獻與程式結構見 [英文 README](README.md)。這是獨立教育專案，與 Stanford 或模型供應商無隸屬關係。
 
 ## 開源
 
 原始程式與教學文字採 [MIT License](LICENSE)。字型保留 SIL Open Font License，詳見 [第三方授權](docs/THIRD_PARTY.md)。歡迎依 [貢獻說明](CONTRIBUTING.md) 回報問題或提交修改。
+
+## 保存與重播
+
+匯出 JSON 後可用「匯入實驗 JSON」恢復設定，所有結果都會重新計算。支援既有第 1 版匯出格式，上限 1 MB；無效檔案不改變目前實驗。詳見[保存與重播說明](docs/REPLAY.md)。
