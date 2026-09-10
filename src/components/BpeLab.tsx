@@ -2,11 +2,12 @@ import { useMemo, useState } from 'react';
 import { BPE_CORPUS, createCorpus, pairCounts, stepBpe, tokenCount } from '../core/bpe';
 import { Check, Download, Readout } from './shared';
 import type { Translate } from './shared';
+import type { BpeInput } from '../core/replay';
 
-export default function BpeLab({ t }: { t: Translate }) {
-  const [corpus, setCorpus] = useState(BPE_CORPUS);
-  const [draft, setDraft] = useState(BPE_CORPUS);
-  const [steps, setSteps] = useState(0);
+export default function BpeLab({ t, initial: replay }: { t: Translate; initial?: BpeInput }) {
+  const [corpus, setCorpus] = useState(replay?.corpus ?? BPE_CORPUS);
+  const [draft, setDraft] = useState(replay?.corpus ?? BPE_CORPUS);
+  const [steps, setSteps] = useState(replay?.steps ?? 0);
   const initial = useMemo(() => createCorpus(corpus), [corpus]);
   const state = useMemo(() => {
     let current = initial;

@@ -9,11 +9,22 @@ export function pct(n: number) {
   return `${(n * 100).toFixed(1)}%`;
 }
 
-export function Download({ data, name, t }: { data: unknown; name: string; t: Translate }) {
+export function Download({
+  data,
+  name,
+  t,
+  disabled = false,
+}: {
+  data: unknown;
+  name: string;
+  t: Translate;
+  disabled?: boolean;
+}) {
   const [saved, setSaved] = useState(false);
   return (
     <button
       className="text-button"
+      disabled={disabled}
       onClick={() => {
         const blob = new Blob(
           [

@@ -2,11 +2,19 @@ import { useEffect, useState } from 'react';
 import AttentionLab from './components/AttentionLab';
 import SamplingLab from './components/SamplingLab';
 import BpeLab from './components/BpeLab';
+import ImportExperiment from './components/ImportExperiment';
+import type { AttentionInput, SamplingInput, BpeInput } from './core/replay';
 
 const tabs = ['attention', 'sampling', 'bpe'] as const;
 type Lab = (typeof tabs)[number];
 
 export default function App() {
+  const [replays, setReplays] = useState<{
+    attention?: AttentionInput;
+    sampling?: SamplingInput;
+    bpe?: BpeInput;
+  }>({});
+  const [revisions, setRevisions] = useState({ attention: 0, sampling: 0, bpe: 0 });
   const [lang, setLang] = useState(() =>
     new URLSearchParams(window.location.search).get('lang') === 'en' ? 'en' : 'zh-Hant',
   );
@@ -102,15 +110,26 @@ export default function App() {
               </button>
             ))}
           </div>
-          <span className="edition">OPEN LAB / v0.1</span>
+          <span className="edition">OPEN LAB / v0.2</span>
         </div>
+        <ImportExperiment
+          t={t}
+          onImport={(replay) => {
+            setReplays((current) => ({ ...current, [replay.experiment]: replay.input }));
+            setRevisions((current) => ({
+              ...current,
+              [replay.experiment]: current[replay.experiment] + 1,
+            }));
+            setActive(replay.experiment);
+          }}
+        />
         <div
           id="panel-attention"
           role="tabpanel"
           aria-labelledby="tab-attention"
           hidden={active !== 'attention'}
         >
-          <AttentionLab t={t} />
+          <AttentionLab key={revisions.attention} initial={replays.attention} t={t} />
         </div>
         <div
           id="panel-sampling"
@@ -118,10 +137,10 @@ export default function App() {
           aria-labelledby="tab-sampling"
           hidden={active !== 'sampling'}
         >
-          <SamplingLab t={t} />
+          <SamplingLab key={revisions.sampling} initial={replays.sampling} t={t} />
         </div>
         <div id="panel-bpe" role="tabpanel" aria-labelledby="tab-bpe" hidden={active !== 'bpe'}>
-          <BpeLab t={t} />
+          <BpeLab key={revisions.bpe} initial={replays.bpe} t={t} />
         </div>
       </main>
       <footer>

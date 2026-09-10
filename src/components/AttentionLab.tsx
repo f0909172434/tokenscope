@@ -2,14 +2,15 @@ import { useState } from 'react';
 import { attention, ATTENTION_FIXTURE } from '../core/attention';
 import { Check, Download, fmt, pct, Readout, Slider, Toggle } from './shared';
 import type { Translate } from './shared';
+import type { AttentionInput } from '../core/replay';
 
 const copyMatrix = (m: number[][]) => m.map((row) => [...row]);
 
-export default function AttentionLab({ t }: { t: Translate }) {
-  const [selected, setSelected] = useState(2);
-  const [causal, setCausal] = useState(true);
-  const [q, setQ] = useState(() => copyMatrix(ATTENTION_FIXTURE.q));
-  const [future, setFuture] = useState(false);
+export default function AttentionLab({ t, initial }: { t: Translate; initial?: AttentionInput }) {
+  const [selected, setSelected] = useState(initial?.selected ?? 2);
+  const [causal, setCausal] = useState(initial?.causal ?? true);
+  const [q, setQ] = useState(() => copyMatrix(initial?.q ?? ATTENTION_FIXTURE.q));
+  const [future, setFuture] = useState(initial?.future ?? false);
   const [guide, setGuide] = useState(-1);
   const words = t('小,貓,正在,看,小鳥', 'The,curious,cat,watches,birds').split(',');
   const v = copyMatrix(ATTENTION_FIXTURE.v);

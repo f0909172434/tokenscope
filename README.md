@@ -16,7 +16,7 @@ A small, bilingual laboratory for three language-model mechanics: causal attenti
 | **Sampling**  | Logits, temperature, top-k, top-p, uint32 seed                           | Before/after probabilities, entropy, candidate count, reproducible independent draws           |
 | **BPE**       | English, Traditional Chinese, overlap example, or a custom corpus        | Frequency-weighted pair counts, individual merges, undo, symbol counts, complete merge history |
 
-Every experiment includes a short concept check and exports its current inputs and computed results. Language switching and tab changes preserve experiment state until the page reloads. The URL remembers the language and active tab, not your experiment inputs.
+Every experiment includes a short concept check and exports its current inputs and computed results. Import an existing JSON export to restore its controls and recompute the results. Language switching and tab changes preserve experiment state until the page reloads. The URL remembers the language and active tab, not your experiment inputs.
 
 ### Try this first
 
@@ -48,7 +48,7 @@ The release includes a prebuilt static ZIP. Extract it and serve the directory w
 ## Verify
 
 ```sh
-npm test                         # 43 numerical and algorithm tests
+npm test                         # numerical, algorithm, and replay validation tests
 npm run build                    # strict TypeScript + production bundle
 npx playwright install chromium
 npm run test:e2e                  # desktop + mobile Chromium
@@ -64,7 +64,7 @@ GitHub Actions runs the same tests before deploying the static build to Pages. P
 - **Attention:** one self-attention head with five positions and hand-set two-dimensional Q/K/V vectors. There are no learned embeddings, positional encodings, training, residual connections, or full Transformer blocks. Word labels are illustrative; weights do not establish a linguistic explanation.
 - **Sampling:** independent draws from fixed logits. The context is not updated between draws, so the displayed token sequence is not autoregressive language generation. Filtering order is documented explicitly rather than assumed to match every provider.
 - **BPE:** word-based Unicode code-point BPE, without whitespace tokens or an end-of-word marker. It demonstrates the merge rule, not a production GPT byte-level tokenizer. The UI accepts 2,000 UTF-16 code units and up to 50 merges; the reusable core allows 20,000 code units. Pair counts include overlaps, while replacement is non-overlapping.
-- **State:** local in-memory state only; refresh resets the experiments. Exports are plain JSON and contain the corpus or settings you entered. There is no import UI in v0.1.
+- **State:** local in-memory state only; refresh resets the experiments. Exports are plain JSON and contain the corpus or settings you entered. Use the import control to replay a saved experiment; all outputs are recomputed. See [replay limits and compatibility](docs/REPLAY.md).
 
 ## Project structure
 

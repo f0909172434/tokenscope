@@ -3,13 +3,14 @@ import { distribution, sampleMany, SAMPLING_LOGITS } from '../core/sampling';
 import type { SamplingOptions } from '../core/sampling';
 import { Check, Download, fmt, pct, Readout, Slider } from './shared';
 import type { Translate } from './shared';
+import type { SamplingInput } from '../core/replay';
 
-export default function SamplingLab({ t }: { t: Translate }) {
+export default function SamplingLab({ t, initial }: { t: Translate; initial?: SamplingInput }) {
   const defaults: SamplingOptions = { temperature: 1, topK: 0, topP: 1 };
-  const [options, setOptions] = useState(defaults);
-  const [logits, setLogits] = useState([...SAMPLING_LOGITS]);
-  const [seedText, setSeedText] = useState('42');
-  const [count, setCount] = useState(0);
+  const [options, setOptions] = useState(initial?.options ?? defaults);
+  const [logits, setLogits] = useState(initial?.logits ?? [...SAMPLING_LOGITS]);
+  const [seedText, setSeedText] = useState(String(initial?.seed ?? 42));
+  const [count, setCount] = useState(initial?.count ?? 0);
   const seed = Number(seedText);
   const validSeed =
     /^\d+$/.test(seedText) && Number.isInteger(seed) && seed >= 0 && seed <= 0xffffffff;
@@ -255,6 +256,7 @@ export default function SamplingLab({ t }: { t: Translate }) {
           <Download
             t={t}
             name="sampling"
+            disabled={!validSeed}
             data={{
               logits,
               options,
